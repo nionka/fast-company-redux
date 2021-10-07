@@ -7,12 +7,14 @@ import SearchStatus from './SearchStatus';
 import { paginate } from '../utils/paginate';
 import UserTable from './UsersTable';
 import Loading from './Loading';
+import TextField from './TextField';
 
 const Users = () => {
   const [currentPage, setcurrentPage] = useState(1);
   const [professions, setProfessions] = useState();
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
+  const [search, setSearch] = useState('');
 
   const pageSize = 4;
 
@@ -47,6 +49,7 @@ const Users = () => {
 
   const handleProfessionSelect = (item) => {
     setSelectedProf(item);
+    setSearch('');
   };
 
   const handlePageChange = (pageIndex) => {
@@ -61,10 +64,21 @@ const Users = () => {
     setSortBy(item);
   };
 
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    setSelectedProf();
+  };
+
   if (users) {
-    const filteredUsers = selectedProf
-      ? users.filter(user => user.profession.name === selectedProf.name)
-      : users;
+    let filteredUsers = users;
+
+    if (selectedProf) {
+      filteredUsers = users.filter(user => user.profession.name === selectedProf.name);
+    }
+
+    if (search) {
+      filteredUsers = users.filter(user => user.name.toLowerCase().includes(search.toLowerCase()));
+    }
 
     const count = filteredUsers.length;
 
@@ -91,6 +105,13 @@ const Users = () => {
       }
       <div>
         <SearchStatus length={count} />
+        <TextField
+          label=""
+          name="search"
+          placeholder="Search..."
+          value={search}
+          onChange={handleSearch}
+        />
         {count !== 0 &&
           <UserTable
             users={usersCrop}
