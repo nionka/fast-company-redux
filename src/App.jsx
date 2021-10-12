@@ -13,7 +13,7 @@ const App = () => {
     <BrowserRouter>
       <NavBar />
       <Switch>
-        <Route path='/login' component={Login} />
+        <Route path='/login/:type?' component={Login} />
         <Route path='/users/:id' component={UserPage} />
         <Route path='/users' component={UsersList} />
         <Route path='/' component={Main} />
