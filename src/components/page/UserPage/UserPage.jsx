@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Loading from './Loading';
-import api from '../api';
-import QualitiesList from './QualitiesList';
+import Loading from '../../common/Loading';
+import api from '../../../api';
+import QualitiesList from '../../ui/qualities';
 import { useHistory } from 'react-router-dom';
 
-const CurrentUser = ({ match }) => {
+const UserPage = ({ match }) => {
   const [user, setUser] = useState();
   const history = useHistory();
   const id = match.params.id;
@@ -33,8 +33,8 @@ const CurrentUser = ({ match }) => {
   return <Loading />;
 };
 
-CurrentUser.propTypes = {
+UserPage.propTypes = {
   match: PropTypes.object
 };
 
-export default CurrentUser;
+export default UserPage;

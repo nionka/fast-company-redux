@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TableHeader from './TableHeader';
-import TableBody from './TableBody';
-import BookMark from './BookMark';
-import QualitiesList from './QualitiesList';
-import Table from './Table';
+// import TableHeader from './TableHeader';
+// import TableBody from './TableBody';
+import BookMark from '../common/BookMark';
+import QualitiesList from './qualities';
+import Table from '../common/table/index';
 
 const UserTable = ({ users, onSort, selectedSort, onDelete, ...rest }) => {
   const columns = {
@@ -35,8 +35,8 @@ const UserTable = ({ users, onSort, selectedSort, onDelete, ...rest }) => {
         columns={columns}
         data={users}
       >
-        <TableHeader { ...{ onSort, selectedSort, columns }} />
-        <TableBody {...{ columns, data: users }} />
+        {/* <TableHeader { ...{ onSort, selectedSort, columns }} />
+        <TableBody {...{ columns, data: users }} /> */}
       </Table>
     </>
   );

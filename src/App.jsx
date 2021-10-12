@@ -1,11 +1,11 @@
 import React from 'react';
-import Users from './components/users';
-import NavBar from './components/NavBar';
-import Main from './components/Main';
+import UsersList from './components/page/UsersListPage/UsersListPage';
+import NavBar from './components/ui/NavBar';
+import Main from './layouts/Main';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './layouts/Login';
-import CurrentUser from './components/CurrentUser';
-import Loading from './components/Loading';
+import Loading from './components/common/Loading';
+import UserPage from './components/page/UserPage/UserPage';
 
 const App = () => {
   return (
@@ -14,8 +14,8 @@ const App = () => {
       <NavBar />
       <Switch>
         <Route path='/login' component={Login} />
-        <Route path='/users/:id' component={CurrentUser} />
-        <Route path='/users' component={Users} />
+        <Route path='/users/:id' component={UserPage} />
+        <Route path='/users' component={UsersList} />
         <Route path='/' component={Main} />
         <Route path='*' component={Loading} />
       </Switch>
