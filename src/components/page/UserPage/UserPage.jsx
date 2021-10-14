@@ -5,13 +5,12 @@ import api from '../../../api';
 import QualitiesList from '../../ui/qualities';
 import { useHistory } from 'react-router-dom';
 
-const UserPage = ({ match }) => {
+const UserPage = ({ userId }) => {
   const [user, setUser] = useState();
   const history = useHistory();
-  const id = match.params.id;
 
   useEffect(() => {
-    api.users.getById(id)
+    api.users.getById(userId)
       .then(response => setUser(response));
   }, []);
 
@@ -34,7 +33,7 @@ const UserPage = ({ match }) => {
 };
 
 UserPage.propTypes = {
-  match: PropTypes.object
+  userId: PropTypes.string
 };
 
 export default UserPage;
