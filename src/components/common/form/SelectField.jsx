@@ -7,7 +7,7 @@ const SelectField = ({ label, value, onChange, defaultOption, options, error }) 
   };
 
   const optionsArray = !Array.isArray(options) && typeof options === 'object'
-    ? Object.keys(options).map(opt => ({ name: opt, value: options[opt]._id }))
+    ? Object.keys(options).map(opt => ({ name: options[opt].name, value: options[opt]._id }))
     : options;
 
   const handleChange = ({ target }) => {
@@ -33,7 +33,7 @@ const SelectField = ({ label, value, onChange, defaultOption, options, error }) 
         </option>
         {optionsArray && optionsArray.map(option => (
           <option
-            key={option.name}
+            key={option.value}
             value={option.value}
           >
             {option.name}

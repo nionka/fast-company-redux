@@ -24,7 +24,12 @@ const UserPage = ({ userId }) => {
         </div>
         <div>completedMeetings: {user.completedMeetings}</div>
         <h3>Rate: {user.rate}</h3>
-        <button onClick={() => history.push('/users')}>Все пользователи</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => history.push(`/users/${userId}/edit`)}
+        >
+          Изменить
+        </button>
       </div>
     );
   }
