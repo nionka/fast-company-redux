@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Loading from '../../common/Loading';
 import api from '../../../api';
-import QualitiesList from '../../ui/qualities';
+import InfoCard from '../../common/cards/userCards/InfoCard';
 import { useHistory } from 'react-router-dom';
+import QualitiesCard from '../../common/cards/userCards/QualitiesCard';
+import MeetingsCard from '../../common/cards/userCards/MeetingsCard';
+import CommentsList from '../../common/cards/commentCards/CommenstList';
 
 const UserPage = ({ userId }) => {
   const [user, setUser] = useState();
@@ -14,22 +17,28 @@ const UserPage = ({ userId }) => {
       .then(response => setUser(response));
   }, []);
 
+  const handleEdit = () => {
+    history.push(`/users/${userId}/edit`);
+  };
+
   if (user) {
     return (
-      <div className="m-3">
-        <h1>{user.name}</h1>
-        <h3>Профессия: {user.profession.name}</h3>
-        <div className="mb-2">
-          <QualitiesList qualities={user.qualities}/>
+      <div className="container">
+        <div className="row gutters-sm">
+        <div className="col-md-4 mb-3">
+          <InfoCard
+            name={user.name}
+            profession={user.profession.name}
+            rate={user.rate}
+            handleEdit={handleEdit}
+          />
+          <QualitiesCard qualities={user.qualities}/>
+          <MeetingsCard meetingsNumber={user.completedMeetings} />
         </div>
-        <div>completedMeetings: {user.completedMeetings}</div>
-        <h3>Rate: {user.rate}</h3>
-        <button
-          className="btn btn-primary"
-          onClick={() => history.push(`/users/${userId}/edit`)}
-        >
-          Изменить
-        </button>
+        <div className="col-md-8">
+          <CommentsList />
+        </div>
+        </div>
       </div>
     );
   }

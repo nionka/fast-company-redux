@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SelectField = ({ label, value, onChange, defaultOption, options, error }) => {
+const SelectField = ({ label, name, value, onChange, defaultOption, options, error }) => {
   const getInputClasses = () => {
     return `form-select ${error ? 'is-invalid' : ''}`;
   };
 
   const optionsArray = !Array.isArray(options) && typeof options === 'object'
     ? Object.keys(options).map(opt => ({ name: options[opt].name, value: options[opt]._id }))
-    : options;
+    : options.map(opt => ({ name: opt.name, value: opt._id }));
 
   const handleChange = ({ target }) => {
     onChange({ name: target.name, value: target.value });
@@ -21,7 +21,7 @@ const SelectField = ({ label, value, onChange, defaultOption, options, error }) 
         className={getInputClasses()}
         id="validationCustom04"
         required
-        name="profession"
+        name={name}
         value={value}
         onChange={handleChange}
       >
@@ -48,8 +48,14 @@ const SelectField = ({ label, value, onChange, defaultOption, options, error }) 
     </div>);
 };
 
+SelectField.defaultProps = {
+  name: 'profession',
+  options: []
+};
+
 SelectField.propTypes = {
   label: PropTypes.string.isRequired,
+  name: PropTypes.string,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   defaultOption: PropTypes.string.isRequired,

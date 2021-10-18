@@ -64,8 +64,11 @@ const EditForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(user);
     api.users.update(userId, user);
+    history.push(`/users/${userId}`);
+  };
+
+  const handleBack = () => {
     history.push(`/users/${userId}`);
   };
 
@@ -92,7 +95,11 @@ const EditForm = () => {
 
   return (
     <div className="container mt-5">
+      <button className="btn btn-primary" onClick={handleBack}>
+        <i className="bi bi-caret-left"></i>Назад
+      </button>
       <div className="row">
+        <div className="col-md-6 offset-md-3 shadow p-4">
         <form onSubmit={handleSubmit}>
             <TextField
               label="Имя"
@@ -137,6 +144,7 @@ const EditForm = () => {
               Обновить
             </button>
           </form>
+        </div>
       </div>
     </div>
   );

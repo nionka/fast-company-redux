@@ -64,8 +64,8 @@ const UsersListPage = () => {
     setSortBy(item);
   };
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
+  const handleSearch = (target) => {
+    setSearch(target.value);
     setSelectedProf();
   };
 
