@@ -8,6 +8,7 @@ import { paginate } from '../../../utils/paginate';
 import UserTable from '../../ui/UsersTable';
 import Loading from '../../common/Loading';
 import TextField from '../../common/form/TextField';
+import { useUser } from '../../../hooks/useUsers';
 
 const UsersListPage = () => {
   const [currentPage, setcurrentPage] = useState(1);
@@ -18,24 +19,23 @@ const UsersListPage = () => {
 
   const pageSize = 4;
 
-  const [users, setUsers] = useState();
-
-  useEffect(() => {
-    api.users.fetchAll()
-      .then(response => setUsers(response));
-  }, []);
+  const { users } = useUser();
+  console.log(users);
 
   const handleDelete = id => {
-    setUsers(() => users.filter(user => user._id !== id));
+    // setUsers(() => users.filter(user => user._id !== id));
+    console.log(id);
   };
 
   const handleClick = (id) => {
-    setUsers(users.map(user => {
-      if (user._id === id) {
-        user.status = !user.status;
-      }
-      return user;
-    }));
+    // setUsers(users.map(user => {
+    //   if (user._id === id) {
+    //     user.status = !user.status;
+    //   }
+    //   return user;
+    // }));
+
+    console.log('click');
   };
 
   useEffect(() => {

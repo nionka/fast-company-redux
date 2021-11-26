@@ -5,12 +5,13 @@ import PropTypes from 'prop-types';
 import BookMark from '../common/BookMark';
 import QualitiesList from './qualities';
 import Table from '../common/table/index';
+import Profession from './profession';
 
 const UserTable = ({ users, onSort, selectedSort, onDelete, ...rest }) => {
   const columns = {
     name: { path: 'name', name: 'Имя' },
     qualities: { name: 'Качества', component: (user) => (<QualitiesList qualities={user.qualities} />) },
-    profession: { path: 'profession.name', name: 'Профессия' },
+    profession: { name: 'Профессия', component: (user) => (<Profession id={user.profession} />) },
     completedMeetings: { path: 'completedMeetings', name: 'Встретился, раз' },
     rate: { path: 'rate', name: 'Оценка' },
     status: { path: 'status', name: 'Избранное', component: (user) => <BookMark status={user.status} id={user._id} {...rest} /> },
