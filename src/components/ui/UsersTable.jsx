@@ -10,7 +10,7 @@ import Profession from './profession';
 const UserTable = ({ users, onSort, selectedSort, onDelete, ...rest }) => {
   const columns = {
     name: { path: 'name', name: 'Имя' },
-    qualities: { name: 'Качества', component: (user) => (<QualitiesList qualities={user.qualities} />) },
+    qualities: { name: 'Качества', component: (user) => (<QualitiesList qualitiesId={user.qualities} />) },
     profession: { name: 'Профессия', component: (user) => (<Profession id={user.profession} />) },
     completedMeetings: { path: 'completedMeetings', name: 'Встретился, раз' },
     rate: { path: 'rate', name: 'Оценка' },

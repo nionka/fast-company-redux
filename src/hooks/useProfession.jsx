@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import professionService from '../services/profession.service';
 import { toast } from 'react-toastify';
-// import { professions } from '../api/fake.api/professions.api';
 
 const ProfessionContext = React.createContext();
 

@@ -7,6 +7,7 @@ import Loading from './components/common/Loading';
 import Users from './layouts/Users';
 import { ToastContainer } from 'react-toastify';
 import { ProfessionProvider } from './hooks/useProfession';
+import { QualitiesProvider } from './hooks/useQualities';
 
 const App = () => {
   return (
@@ -14,12 +15,14 @@ const App = () => {
     <BrowserRouter>
       <NavBar />
       <ProfessionProvider>
+        <QualitiesProvider>
         <Switch>
           <Route path='/login/:type?' component={Login} />
           <Route path='/users/:userId?/:edit?' component={Users} />
           <Route path='/' component={Main} />
           <Route path='*' component={Loading} />
         </Switch>
+        </QualitiesProvider>
       </ProfessionProvider>
     </BrowserRouter>
     <ToastContainer />
