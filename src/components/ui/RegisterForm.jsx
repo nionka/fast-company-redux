@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import TextField from '../common/form/TextField';
 import { validator } from '../../utils/validator';
-import api from '../../api';
 import SelectField from '../common/form/SelectField';
 import RadioField from '../common/form/RadioField';
 import MultiSelectField from '../common/form/MultiSelectField';
 import CheckBoxField from '../common/form/CheckBoxField';
+import { useQualities } from '../../hooks/useQualities';
+import { useProfessions } from '../../hooks/useProfession';
+import { useAuth } from '../../hooks/useAuth';
+import { useHistory } from 'react-router-dom';
 
 const RegisterForm = () => {
+  const history = useHistory();
   const [data, setData] = useState({ email: '', password: '', profession: '', gender: 'male', qualities: [], licence: false });
-  const [professions, setProfessions] = useState();
-  const [qualities, setQualities] = useState({});
+  const { professions } = useProfessions();
+  const { qualities } = useQualities();
+  const { signUp } = useAuth();
   const [errors, setErrors] = useState({});
   const isValid = Object.keys(errors).length === 0;
 
@@ -18,24 +23,24 @@ const RegisterForm = () => {
     validate();
   }, [data]);
 
-  useEffect(() => {
-    api.professions.fetchAll()
-      .then(response => setProfessions(response));
-    api.qualities.fetchAll()
-      .then(response => setQualities(response));
-  }, []);
-
   const handleChange = (target) => {
     setData(prev => ({ ...prev, [target.name]: target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validate();
 
     if (!isValid) return;
 
-    console.log(data);
+    const newData = { ...data, qualities: data.qualities.map((q) => q.value) };
+
+    try {
+      await signUp(newData);
+      history.push('/');
+    } catch (error) {
+      setErrors(error);
+    }
   };
 
   const validateConfig = {
