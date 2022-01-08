@@ -1,42 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Loading from '../../common/Loading';
-import api from '../../../api';
 import InfoCard from '../../common/cards/userCards/InfoCard';
 import { useHistory } from 'react-router-dom';
 import QualitiesCard from '../../common/cards/userCards/QualitiesCard';
 import MeetingsCard from '../../common/cards/userCards/MeetingsCard';
 import CommentsList from '../../common/cards/commentCards/CommenstList';
+import { useUser } from '../../../hooks/useUsers';
+import CommentsProvider from '../../../hooks/useComments';
+import { useProfessions } from '../../../hooks/useProfession';
 
 const UserPage = ({ userId }) => {
-  const [user, setUser] = useState();
   const history = useHistory();
-
-  useEffect(() => {
-    api.users.getById(userId)
-      .then(response => setUser(response));
-  }, []);
+  const { getUserById } = useUser();
+  const { getProfession } = useProfessions();
+  const user = getUserById(userId);
+  const profession = getProfession(user.profession);
 
   const handleEdit = () => {
     history.push(`/users/${userId}/edit`);
   };
 
-  if (user) {
+  if (user && profession) {
     return (
       <div className="container">
         <div className="row gutters-sm">
         <div className="col-md-4 mb-3">
           <InfoCard
+            id={user._id}
             name={user.name}
-            profession={user.profession.name}
+            profession={profession.name}
             rate={user.rate}
+            image={user.image}
             handleEdit={handleEdit}
           />
           <QualitiesCard qualities={user.qualities}/>
           <MeetingsCard meetingsNumber={user.completedMeetings} />
         </div>
         <div className="col-md-8">
-          <CommentsList />
+          <CommentsProvider>
+            <CommentsList />
+          </CommentsProvider>
         </div>
         </div>
       </div>

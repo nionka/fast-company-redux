@@ -36,15 +36,7 @@ export const QualitiesProvider = ({ children }) => {
   }
 
   function getQuality (qualitiesId) {
-    const qualitiesArray = [];
-
-    qualities.forEach(q => {
-      if (qualitiesId.includes(q._id)) {
-        qualitiesArray.push(q);
-      }
-    });
-
-    return qualitiesArray;
+    return qualities.find((quality) => quality._id === qualitiesId);
   }
 
   function errorCather (error) {

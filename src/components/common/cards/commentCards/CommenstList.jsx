@@ -1,41 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import api from '../../../../api';
+import React from 'react';
+import { useComments } from '../../../../hooks/useComments';
 import CommentCard from './CommentCard';
 import CommentForm from './CommentForm';
 
 const CommentsList = () => {
-  const [comments, setComments] = useState([]);
-  const [users, setUsers] = useState();
-  const [renderComment, setRenderComment] = useState(false);
-  const params = useParams();
-  const { userId } = params;
-
-  useEffect(() => {
-    api.comments.fetchCommentsForUser(userId)
-      .then(response => setComments(response));
-  }, [renderComment]);
-
-  useEffect(() => {
-    api.users.fetchAll()
-      .then(response => setUsers(response));
-  }, []);
+  const { createComment, comments, removeComment } = useComments();
 
   const handleSubmit = (data) => {
-    api.comments.add({ pageId: userId, userId: data.name, content: data.content });
-    setRenderComment(!renderComment);
+    createComment(data);
   };
 
   const handleDeleteComment = (commentId) => {
-    api.comments.remove(commentId);
-    setRenderComment(!renderComment);
+    removeComment(commentId);
   };
 
   return (
     <>
       <div className="card mb-2">
           <div className="card-body ">
-              <CommentForm users={users} onSubmit={handleSubmit} />
+              <CommentForm onSubmit={handleSubmit} />
           </div>
       </div>
       { comments.length !== 0 &&

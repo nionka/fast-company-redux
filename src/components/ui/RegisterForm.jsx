@@ -12,7 +12,15 @@ import { useHistory } from 'react-router-dom';
 
 const RegisterForm = () => {
   const history = useHistory();
-  const [data, setData] = useState({ email: '', password: '', profession: '', gender: 'male', qualities: [], licence: false });
+  const [data, setData] = useState({
+    email: '',
+    password: '',
+    name: '',
+    profession: '',
+    gender: 'male',
+    qualities: [],
+    licence: false
+  });
   const { professions } = useProfessions();
   const { qualities } = useQualities();
   const { signUp } = useAuth();
@@ -54,6 +62,9 @@ const RegisterForm = () => {
       isContainDigit: { message: 'Пароль должен содержать хотя бы одну цифру' },
       min: { message: 'Длина пароля - не меньше 8 символов', value: 8 }
     },
+    name: {
+      isRequired: { message: 'Имя обязательно для заполнения' }
+    },
     profession: {
       isRequired: { message: 'Необходимо выбрать профессию' }
     },
@@ -78,6 +89,13 @@ const RegisterForm = () => {
               value={data.email}
               onChange={handleChange}
               error={errors.email}
+            />
+            <TextField
+              label='Имя'
+              name='name'
+              value={data.name}
+              onChange={handleChange}
+              error={errors.name}
             />
             <TextField
               label='Пароль'

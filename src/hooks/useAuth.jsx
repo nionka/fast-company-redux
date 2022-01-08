@@ -3,9 +3,13 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import userService from '../services/user.service';
-import { setTokens } from '../services/localStorage.service';
+import localStorageService, { setTokens } from '../services/localStorage.service';
+import { useHistory } from 'react-router-dom';
+import { rundomImg } from '../utils/rundomImg';
 
-const httpAuth = axios.create();
+export const httpAuth = axios.create({
+  baseURL: 'https://identitytoolkit.googleapis.com/v1/'
+});
 
 const AuthContext = React.createContext();
 
@@ -14,8 +18,10 @@ export const useAuth = () => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [currentUser, setUser] = useState({});
+  const [currentUser, setUser] = useState();
+  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
     if (error !== null) {
@@ -24,12 +30,42 @@ const AuthProvider = ({ children }) => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (localStorageService.getAccessToken()) {
+      getUserData();
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  function randomInt (min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  async function getUserData () {
+    try {
+      const { content } = await userService.getCurrentUser();
+      setUser(content);
+    } catch (error) {
+      errorCather(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function signUp ({ email, password, ...rest }) {
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
     try {
       const { data } = await httpAuth.post(url, { email, password, returnSecureToken: true });
       setTokens(data);
-      await createUser({ _id: data.localId, email, ...rest });
+      await createUser({
+        _id: data.localId,
+        email,
+        rate: randomInt(1, 5),
+        completedMeetings: randomInt(0, 200),
+        image: rundomImg(),
+        ...rest
+      });
     } catch (error) {
       errorCather(error);
       const { code, message } = error.response.data.error;
@@ -48,6 +84,7 @@ const AuthProvider = ({ children }) => {
     try {
       const { data } = await httpAuth.post(url, { email, password, returnSecureToken: true });
       setTokens(data);
+      await getUserData();
     } catch (error) {
       errorCather(error);
 
@@ -68,9 +105,16 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  function logOut () {
+    localStorageService.removeAuthData();
+    setUser(null);
+    history.push('/');
+  }
+
   async function createUser (data) {
     try {
-      const { content } = userService.create(data);
+      const { content } = await userService.create(data);
+      console.log(content);
       setUser(content);
     } catch (error) {
       errorCather(error);
@@ -83,8 +127,8 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ signUp, signIn, currentUser }}>
-        {children}
+    <AuthContext.Provider value={{ signUp, signIn, logOut, currentUser }}>
+        {!isLoading ? children : 'Loading...'}
     </AuthContext.Provider>
   );
 };

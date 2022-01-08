@@ -10,7 +10,7 @@ const QualitiesCard = ({ qualities }) => {
             <span>Qualities</span>
         </h5>
         <p className="card-text">
-          {qualities.map(qualitie => <Qualitie key={qualitie._id} color={qualitie.color} name={qualitie.name} />)}
+          {qualities.map(quality => <Qualitie key={quality} qualityId={quality} />)}
         </p>
     </div>
 </div>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import api from '../../../api';
 import Pagination from '../../common/Pagination';
 import GroupList from '../../common/GroupList';
 import SearchStatus from '../../ui/SearchStatus';
@@ -9,10 +8,12 @@ import UserTable from '../../ui/UsersTable';
 import Loading from '../../common/Loading';
 import TextField from '../../common/form/TextField';
 import { useUser } from '../../../hooks/useUsers';
+import { useProfessions } from '../../../hooks/useProfession';
+import { useAuth } from '../../../hooks/useAuth';
 
 const UsersListPage = () => {
   const [currentPage, setcurrentPage] = useState(1);
-  const [professions, setProfessions] = useState();
+  const { isLoading: professionsLoading, professions } = useProfessions();
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
   const [search, setSearch] = useState('');
@@ -20,28 +21,12 @@ const UsersListPage = () => {
   const pageSize = 4;
 
   const { users } = useUser();
+  const { currentUser } = useAuth();
   console.log(users);
 
-  const handleDelete = id => {
-    // setUsers(() => users.filter(user => user._id !== id));
-    console.log(id);
-  };
-
   const handleClick = (id) => {
-    // setUsers(users.map(user => {
-    //   if (user._id === id) {
-    //     user.status = !user.status;
-    //   }
-    //   return user;
-    // }));
-
     console.log('click');
   };
-
-  useEffect(() => {
-    api.professions.fetchAll()
-      .then(response => setProfessions(response));
-  }, [professions]);
 
   useEffect(() => {
     setcurrentPage(1);
@@ -70,7 +55,7 @@ const UsersListPage = () => {
   };
 
   if (users) {
-    let filteredUsers = users;
+    let filteredUsers = users.filter((u) => u._id !== currentUser._id);
 
     if (selectedProf) {
       filteredUsers = users.filter(user => user.profession.name === selectedProf.name);
@@ -88,7 +73,7 @@ const UsersListPage = () => {
 
     return (
     <div className="d-flex justify-content-center">
-      {professions &&
+      {professions && !professionsLoading &&
         <div className="d-flex flex-column flex-shrink-0 p-3">
           <GroupList
             selectedItem={selectedProf}
@@ -117,7 +102,6 @@ const UsersListPage = () => {
             users={usersCrop}
             onSort={handleSort}
             selectedSort={sortBy}
-            onDelete={handleDelete}
             handleClick={handleClick}
           />
         }

@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { rundomImg } from '../../../../utils/rundomImg';
+import { useAuth } from '../../../../hooks/useAuth';
 
-const InfoCard = ({ name, profession, rate, handleEdit }) => {
+const InfoCard = ({ id, name, profession, rate, handleEdit, image }) => {
+  const { currentUser } = useAuth();
   return (
     <div className="card mb-3">
     <div className="card-body">
-        <button className="position-absolute top-0 end-0 btn btn-light btn-sm" onClick={handleEdit}>
-            <i className="bi bi-gear"></i>
-        </button>
+        {currentUser._id === id && (
+            <button className="position-absolute top-0 end-0 btn btn-light btn-sm" onClick={handleEdit}>
+                <i className="bi bi-gear"></i>
+            </button>
+        )}
         <div className="d-flex flex-column align-items-center text-center position-relative">
             <img
-                src={rundomImg()}
+                src={image}
                 className="rounded-circle"
                 width="150"
             />
@@ -31,11 +34,12 @@ const InfoCard = ({ name, profession, rate, handleEdit }) => {
 };
 
 InfoCard.propTypes = {
+  id: PropTypes.string,
   name: PropTypes.string.isRequired,
   profession: PropTypes.string.isRequired,
   rate: PropTypes.number.isRequired,
+  image: PropTypes.string,
   handleEdit: PropTypes.func.isRequired
-
 };
 
 export default InfoCard;
