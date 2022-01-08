@@ -5,7 +5,7 @@ import Qualitie from './Qualitie';
 const QualitiesList = ({ qualitiesId }) => {
   return (
       <>
-        {qualitiesId.map(badge => <Qualitie key={qualitiesId} qualityId={badge} />)}
+        {qualitiesId.map(badge => <Qualitie key={badge} qualityId={badge} />)}
       </>
   );
 };

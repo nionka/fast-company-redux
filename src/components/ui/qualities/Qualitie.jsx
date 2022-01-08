@@ -5,6 +5,7 @@ import { useQualities } from '../../../hooks/useQualities';
 const Qualitie = ({ qualityId }) => {
   const { getQuality } = useQualities();
   const quality = getQuality(qualityId);
+  if (!quality) return null;
   const style = `badge bg-${quality.color} me-1`;
 
   return (
