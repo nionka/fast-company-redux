@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
-import api from '../../api';
+import { useAuth } from '../../hooks/useAuth';
+import { useProfessions } from '../../hooks/useProfession';
+import { useQualities } from '../../hooks/useQualities';
 import { validator } from '../../utils/validator';
 import MultiSelectField from '../common/form/MultiSelectField';
 import RadioField from '../common/form/RadioField';
@@ -9,9 +11,10 @@ import TextField from '../common/form/TextField';
 import Loading from '../common/Loading';
 
 const EditForm = () => {
-  const [user, setUser] = useState();
-  const [professions, setProfessions] = useState();
-  const [qualities, setQualities] = useState({});
+  const { currentUser, updateUser } = useAuth();
+  const [user, setUser] = useState(currentUser);
+  const { professions, getProfession } = useProfessions();
+  const { qualities, getQuality } = useQualities();
   const [errors, setErrors] = useState({});
   const isValid = Object.keys(errors).length === 0;
   const params = useParams();
@@ -23,40 +26,16 @@ const EditForm = () => {
   }, [user]);
 
   useEffect(() => {
-    api.users.getById(userId)
-      .then(response => {
-        if (!response.email) {
-          setUser({ ...response, email: '' });
-        } else {
-          setUser(response);
-        }
-      });
-    api.professions.fetchAll()
-      .then(response => setProfessions(response));
-    api.qualities.fetchAll()
-      .then(response => setQualities(response));
+    if (userId !== currentUser._id) {
+      history.push(`/users/${currentUser._id}/edit`);
+    };
   }, []);
 
   const handleChange = (target) => {
     let userValue = target.value;
 
-    if (target.name === 'profession') {
-      for (const key in professions) {
-        if (professions[key]._id === target.value) {
-          userValue = professions[key];
-        }
-      }
-    }
-
     if (target.name === 'qualities') {
-      userValue = [];
-      for (const key in qualities) {
-        target.value.forEach(qual => {
-          if (qual.value === qualities[key]._id) {
-            userValue.push(qualities[key]);
-          }
-        });
-      }
+      userValue = target.value.map((v) => v.value);
     }
 
     setUser(prev => ({ ...prev, [target.name]: userValue }));
@@ -64,7 +43,7 @@ const EditForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    api.users.update(userId, user);
+    updateUser(user);
     history.push(`/users/${userId}`);
   };
 
@@ -89,7 +68,7 @@ const EditForm = () => {
     return Object.keys(errors).length === 0;
   };
 
-  if (!user) {
+  if (!user || qualities.length === 0 || professions.length === 0) {
     return <Loading />;
   }
 
@@ -117,8 +96,8 @@ const EditForm = () => {
             />
             <SelectField
               label="Выберите свою профессию"
-              defaultOption={user.profession.name}
-              value={user.profession._id}
+              defaultOption={getProfession(user.profession).name}
+              value={user.profession}
               options={professions}
               onChange={handleChange}
             />
@@ -132,7 +111,7 @@ const EditForm = () => {
             <MultiSelectField
               label="Выберите ваши качества"
               name="qualities"
-              defaultValue={user.qualities}
+              defaultValue={user.qualities.map((q) => getQuality(q))}
               options={qualities}
               onChange={handleChange}
             />

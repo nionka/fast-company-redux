@@ -4,7 +4,7 @@ import { validator } from '../../../../utils/validator';
 import TextareaField from '../../form/TextareaField';
 
 const CommentForm = ({ onSubmit }) => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({ content: '' });
   const [errors, setErrors] = useState({});
   const isValid = Object.keys(errors).length === 0;
 
@@ -23,7 +23,7 @@ const CommentForm = ({ onSubmit }) => {
     if (!isValid) return;
     onSubmit(data);
 
-    setData({});
+    setData({ content: '' });
   };
 
   const validateConfig = {
@@ -45,7 +45,7 @@ const CommentForm = ({ onSubmit }) => {
           label="Сообщение"
           name="content"
           onChange={handleChange}
-          value={data.content || ''}
+          value={data.content}
           error={errors.content}
         />
         <button
