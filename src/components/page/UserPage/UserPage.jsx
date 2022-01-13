@@ -34,7 +34,7 @@ const UserPage = ({ userId }) => {
             image={user.image}
             handleEdit={handleEdit}
           />
-          <QualitiesCard qualities={user.qualities}/>
+          <QualitiesCard qualitiesIds={user.qualities}/>
           <MeetingsCard meetingsNumber={user.completedMeetings} />
         </div>
         <div className="col-md-8">

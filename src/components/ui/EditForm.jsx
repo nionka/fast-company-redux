@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfessions } from '../../hooks/useProfession';
-import { useQualities } from '../../hooks/useQualities';
+import { getQualities, getQualitiesByIds, getQualitiesLoadingStatus } from '../../store/qualities';
 import { validator } from '../../utils/validator';
 import MultiSelectField from '../common/form/MultiSelectField';
 import RadioField from '../common/form/RadioField';
@@ -14,7 +15,9 @@ const EditForm = () => {
   const { currentUser, updateUser } = useAuth();
   const [user, setUser] = useState(currentUser);
   const { professions, getProfession } = useProfessions();
-  const { qualities, getQuality } = useQualities();
+  const qualities = useSelector(getQualities());
+  const qualitiesByIds = useSelector(getQualitiesByIds(user.qualities));
+  const isLoadingQualities = useSelector(getQualitiesLoadingStatus());
   const [errors, setErrors] = useState({});
   const isValid = Object.keys(errors).length === 0;
   const params = useParams();
@@ -68,7 +71,7 @@ const EditForm = () => {
     return Object.keys(errors).length === 0;
   };
 
-  if (!user || qualities.length === 0 || professions.length === 0) {
+  if (!user || isLoadingQualities || professions.length === 0) {
     return <Loading />;
   }
 
@@ -111,7 +114,7 @@ const EditForm = () => {
             <MultiSelectField
               label="Выберите ваши качества"
               name="qualities"
-              defaultValue={user.qualities.map((q) => getQuality(q))}
+              defaultValue={qualitiesByIds}
               options={qualities}
               onChange={handleChange}
             />
