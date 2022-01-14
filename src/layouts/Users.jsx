@@ -1,14 +1,17 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import UsersLoader from '../components/hoc/UsersLoader';
 import UserPage from '../components/page/UserPage';
 import UsersListPage from '../components/page/UsersListPage';
 import EditForm from '../components/ui/EditForm';
-import UserProvider from '../hooks/useUsers';
+import { getCurrentUserId } from '../store/users';
 
 const Users = () => {
+  const currentUserId = useSelector(getCurrentUserId());
   const params = useParams();
-  const { userId } = params;
-  const { edit } = params;
+  const { userId, edit } = params;
+  console.log(currentUserId);
 
   const getCurrentElem = () => {
     let currentEl = <UsersListPage />;
@@ -25,9 +28,9 @@ const Users = () => {
   };
 
   return (
-    <UserProvider>
+    <UsersLoader>
       {getCurrentElem()}
-    </UserProvider>
+    </UsersLoader>
   );
 };
 

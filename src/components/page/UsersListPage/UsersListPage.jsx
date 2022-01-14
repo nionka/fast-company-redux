@@ -7,10 +7,9 @@ import { paginate } from '../../../utils/paginate';
 import UserTable from '../../ui/UsersTable';
 import Loading from '../../common/Loading';
 import TextField from '../../common/form/TextField';
-import { useUser } from '../../../hooks/useUsers';
-import { useAuth } from '../../../hooks/useAuth';
 import { getProfessions, getProfessionsLoadingStatus } from '../../../store/professions';
 import { useSelector } from 'react-redux';
+import { getCurrentUserId, getUsersList } from '../../../store/users';
 
 const UsersListPage = () => {
   const [currentPage, setcurrentPage] = useState(1);
@@ -22,8 +21,8 @@ const UsersListPage = () => {
 
   const pageSize = 4;
 
-  const { users } = useUser();
-  const { currentUser } = useAuth();
+  const users = useSelector(getUsersList());
+  const currentUserId = useSelector(getCurrentUserId());
   console.log(users);
 
   const handleClick = (id) => {
@@ -57,7 +56,7 @@ const UsersListPage = () => {
   };
 
   if (users) {
-    let filteredUsers = users.filter((u) => u._id !== currentUser._id);
+    let filteredUsers = users.filter((u) => u._id !== currentUserId);
 
     if (selectedProf) {
       filteredUsers = users.filter(user => user.profession === selectedProf._id);

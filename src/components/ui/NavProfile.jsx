@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { getCurrentUserData } from '../../store/users';
+import Loading from '../common/Loading';
 
 const NavProfile = () => {
-  const { currentUser } = useAuth();
+  const currentUser = useSelector(getCurrentUserData());
   const [isOpen, setOpen] = useState(false);
+
+  if (!currentUser) return <Loading />;
 
   const toggleMenu = () => {
     setOpen((prev) => !prev);

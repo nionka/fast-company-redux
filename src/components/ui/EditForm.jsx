@@ -4,6 +4,7 @@ import { useHistory, useParams } from 'react-router';
 import { useAuth } from '../../hooks/useAuth';
 import { getProfessionById, getProfessions } from '../../store/professions';
 import { getQualities, getQualitiesByIds, getQualitiesLoadingStatus } from '../../store/qualities';
+import { getCurrentUserData } from '../../store/users';
 import { validator } from '../../utils/validator';
 import MultiSelectField from '../common/form/MultiSelectField';
 import RadioField from '../common/form/RadioField';
@@ -12,7 +13,8 @@ import TextField from '../common/form/TextField';
 import Loading from '../common/Loading';
 
 const EditForm = () => {
-  const { currentUser, updateUser } = useAuth();
+  const { updateUser } = useAuth();
+  const currentUser = useSelector(getCurrentUserData());
   const [user, setUser] = useState(currentUser);
   const professions = useSelector(getProfessions());
   const profession = useSelector(getProfessionById(user.profession));

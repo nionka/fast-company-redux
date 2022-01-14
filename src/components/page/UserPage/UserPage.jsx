@@ -6,15 +6,14 @@ import { useHistory } from 'react-router-dom';
 import QualitiesCard from '../../common/cards/userCards/QualitiesCard';
 import MeetingsCard from '../../common/cards/userCards/MeetingsCard';
 import CommentsList from '../../common/cards/commentCards/CommenstList';
-import { useUser } from '../../../hooks/useUsers';
 import CommentsProvider from '../../../hooks/useComments';
 import { useSelector } from 'react-redux';
 import { getProfessionById } from '../../../store/professions';
+import { getUserById } from '../../../store/users';
 
 const UserPage = ({ userId }) => {
   const history = useHistory();
-  const { getUserById } = useUser();
-  const user = getUserById(userId);
+  const user = useSelector(getUserById(userId));
   const profession = useSelector(getProfessionById(user.profession));
 
   const handleEdit = () => {

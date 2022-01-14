@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import NavBar from './components/ui/NavBar';
 import Main from './layouts/Main';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import Login from './layouts/Login';
 import Loading from './components/common/Loading';
 import Users from './layouts/Users';
@@ -9,21 +9,14 @@ import { ToastContainer } from 'react-toastify';
 import AuthProvider from './hooks/useAuth';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LogOut from './layouts/LogOut';
-import { useDispatch } from 'react-redux';
-import { loadQualitiesList } from './store/qualities';
-import { loadProfessionsList } from './store/professions';
+import history from './utils/history';
+import AppLoader from './components/hoc/AppLoader';
 
 const App = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(loadQualitiesList());
-    dispatch(loadProfessionsList());
-  }, []);
-
   return (
     <>
-    <BrowserRouter>
+    <Router history={history}>
+      <AppLoader>
       <AuthProvider>
         <NavBar />
           <Switch>
@@ -34,7 +27,8 @@ const App = () => {
             <Route path='*' component={Loading} />
           </Switch>
       </AuthProvider>
-    </BrowserRouter>
+      </AppLoader>
+    </Router>
     <ToastContainer />
     </>
   );

@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useAuth } from '../../../../hooks/useAuth';
+import { useSelector } from 'react-redux';
+import { getCurrentUserId } from '../../../../store/users';
 
 const InfoCard = ({ id, name, profession, rate, handleEdit, image }) => {
-  const { currentUser } = useAuth();
+  const currentUserId = useSelector(getCurrentUserId());
   return (
     <div className="card mb-3">
     <div className="card-body">
-        {currentUser._id === id && (
+        {currentUserId === id && (
             <button className="position-absolute top-0 end-0 btn btn-light btn-sm" onClick={handleEdit}>
                 <i className="bi bi-gear"></i>
             </button>
