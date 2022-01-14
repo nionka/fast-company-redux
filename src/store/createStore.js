@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import ProfessionsReducer from './professions';
 import qualitiesReducer from './qualities';
 
 const rootReducer = combineReducers({
-  qualities: qualitiesReducer
+  qualities: qualitiesReducer,
+  professions: ProfessionsReducer
 });
 
 export function createStore () {

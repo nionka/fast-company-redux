@@ -6,18 +6,19 @@ import Login from './layouts/Login';
 import Loading from './components/common/Loading';
 import Users from './layouts/Users';
 import { ToastContainer } from 'react-toastify';
-import { ProfessionProvider } from './hooks/useProfession';
 import AuthProvider from './hooks/useAuth';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LogOut from './layouts/LogOut';
 import { useDispatch } from 'react-redux';
 import { loadQualitiesList } from './store/qualities';
+import { loadProfessionsList } from './store/professions';
 
 const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(loadQualitiesList());
+    dispatch(loadProfessionsList());
   }, []);
 
   return (
@@ -25,7 +26,6 @@ const App = () => {
     <BrowserRouter>
       <AuthProvider>
         <NavBar />
-        <ProfessionProvider>
           <Switch>
             <Route path='/login/:type?' component={Login} />
             <Route path='/logout' component={LogOut} />
@@ -33,7 +33,6 @@ const App = () => {
             <Route path='/' component={Main} />
             <Route path='*' component={Loading} />
           </Switch>
-        </ProfessionProvider>
       </AuthProvider>
     </BrowserRouter>
     <ToastContainer />

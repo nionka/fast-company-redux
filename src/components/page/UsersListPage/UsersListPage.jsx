@@ -8,12 +8,14 @@ import UserTable from '../../ui/UsersTable';
 import Loading from '../../common/Loading';
 import TextField from '../../common/form/TextField';
 import { useUser } from '../../../hooks/useUsers';
-import { useProfessions } from '../../../hooks/useProfession';
 import { useAuth } from '../../../hooks/useAuth';
+import { getProfessions, getProfessionsLoadingStatus } from '../../../store/professions';
+import { useSelector } from 'react-redux';
 
 const UsersListPage = () => {
   const [currentPage, setcurrentPage] = useState(1);
-  const { isLoading: professionsLoading, professions } = useProfessions();
+  const professions = useSelector(getProfessions());
+  const professionsLoading = useSelector(getProfessionsLoadingStatus());
   const [selectedProf, setSelectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
   const [search, setSearch] = useState('');
@@ -58,7 +60,7 @@ const UsersListPage = () => {
     let filteredUsers = users.filter((u) => u._id !== currentUser._id);
 
     if (selectedProf) {
-      filteredUsers = users.filter(user => user.profession.name === selectedProf.name);
+      filteredUsers = users.filter(user => user.profession === selectedProf._id);
     }
 
     if (search) {

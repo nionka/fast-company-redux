@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { useAuth } from '../../hooks/useAuth';
-import { useProfessions } from '../../hooks/useProfession';
+import { getProfessionById, getProfessions } from '../../store/professions';
 import { getQualities, getQualitiesByIds, getQualitiesLoadingStatus } from '../../store/qualities';
 import { validator } from '../../utils/validator';
 import MultiSelectField from '../common/form/MultiSelectField';
@@ -14,7 +14,8 @@ import Loading from '../common/Loading';
 const EditForm = () => {
   const { currentUser, updateUser } = useAuth();
   const [user, setUser] = useState(currentUser);
-  const { professions, getProfession } = useProfessions();
+  const professions = useSelector(getProfessions());
+  const profession = useSelector(getProfessionById(user.profession));
   const qualities = useSelector(getQualities());
   const qualitiesByIds = useSelector(getQualitiesByIds(user.qualities));
   const isLoadingQualities = useSelector(getQualitiesLoadingStatus());
@@ -99,7 +100,7 @@ const EditForm = () => {
             />
             <SelectField
               label="Выберите свою профессию"
-              defaultOption={getProfession(user.profession).name}
+              defaultOption={profession.name}
               value={user.profession}
               options={professions}
               onChange={handleChange}

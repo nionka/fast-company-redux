@@ -8,14 +8,14 @@ import MeetingsCard from '../../common/cards/userCards/MeetingsCard';
 import CommentsList from '../../common/cards/commentCards/CommenstList';
 import { useUser } from '../../../hooks/useUsers';
 import CommentsProvider from '../../../hooks/useComments';
-import { useProfessions } from '../../../hooks/useProfession';
+import { useSelector } from 'react-redux';
+import { getProfessionById } from '../../../store/professions';
 
 const UserPage = ({ userId }) => {
   const history = useHistory();
   const { getUserById } = useUser();
-  const { getProfession } = useProfessions();
   const user = getUserById(userId);
-  const profession = getProfession(user.profession);
+  const profession = useSelector(getProfessionById(user.profession));
 
   const handleEdit = () => {
     history.push(`/users/${userId}/edit`);
