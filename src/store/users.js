@@ -2,6 +2,7 @@ import { createAction, createSlice } from '@reduxjs/toolkit';
 import authService from '../services/auth.service';
 import localStorageService from '../services/localStorage.service';
 import userService from '../services/user.service';
+import generateAuthError from '../utils/generateAuthErrors';
 import history from '../utils/history';
 import { rundomImg } from '../utils/rundomImg';
 
@@ -54,6 +55,17 @@ const userSlice = createSlice({
       state.isLoggedIn = false;
       state.auth = null;
       state.dataLoaded = false;
+    },
+    userUpdate: (state, action) => {
+      state.entities = state.entities.map((user) => {
+        if (user._id === action.payload._id) {
+          return action.payload;
+        }
+        return user;
+      });
+    },
+    authRequested: (state) => {
+      state.error = null;
     }
   }
 });
@@ -66,12 +78,15 @@ const {
   authRequestSuccess,
   authRequestFailed,
   userCreated,
-  userLoggedOut
+  userLoggedOut,
+  userUpdate
 } = actions;
 
 const authRequested = createAction('users/authRequested');
 const userCreateRequested = createAction('users/userCreateRequested');
 const createUserFailed = createAction('users/createUserFailed');
+const updateUserRequested = createAction('users/updateUserRequested');
+const updateUserFailed = createAction('users/updateUserFailed');
 
 function randomInt (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -86,6 +101,16 @@ const createUser = (payload) => async (dispatch) => {
     history.push('/users');
   } catch (error) {
     dispatch(createUserFailed(error.message));
+  }
+};
+
+export const updateUser = (payload) => async (dispatch) => {
+  dispatch(updateUserRequested());
+  try {
+    const { content } = await userService.update(payload);
+    dispatch(userUpdate(content));
+  } catch (error) {
+    dispatch(updateUserFailed());
   }
 };
 
@@ -109,7 +134,13 @@ export const logIn = ({ payload, redirect }) => async (dispatch) => {
     dispatch(authRequestSuccess({ userId: data.localId }));
     history.push(redirect);
   } catch (error) {
-    dispatch(authRequestFailed(error.message));
+    const { code, message } = error.response.data.error;
+    if (code === 400) {
+      const errorMessage = generateAuthError(message);
+      dispatch(authRequestFailed(errorMessage));
+    } else {
+      dispatch(authRequestFailed(error.message));
+    }
   }
 };
 
@@ -140,7 +171,7 @@ export const logOut = () => (dispatch) => {
 
 export const getUsersList = () => (state) => state.users.entities;
 export const getUsersLoadingStatus = () => (state) => state.users.isLoading;
-export const getUsersError = () => (state) => state.users.error;
+export const getAuthError = () => (state) => state.users.error;
 export const getLoggetIn = () => (state) => state.users.isLoggedIn;
 export const getDataStatus = () => (state) => state.users.dataLoaded;
 export const getCurrentUserId = () => (state) => state.users.auth.userId;
