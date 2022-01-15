@@ -6,7 +6,6 @@ import Login from './layouts/Login';
 import Loading from './components/common/Loading';
 import Users from './layouts/Users';
 import { ToastContainer } from 'react-toastify';
-import AuthProvider from './hooks/useAuth';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import LogOut from './layouts/LogOut';
 import history from './utils/history';
@@ -17,7 +16,6 @@ const App = () => {
     <>
     <Router history={history}>
       <AppLoader>
-      <AuthProvider>
         <NavBar />
           <Switch>
             <Route path='/login/:type?' component={Login} />
@@ -26,7 +24,6 @@ const App = () => {
             <Route path='/' component={Main} />
             <Route path='*' component={Loading} />
           </Switch>
-      </AuthProvider>
       </AppLoader>
     </Router>
     <ToastContainer />

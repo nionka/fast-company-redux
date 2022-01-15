@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import QualitiesCard from '../../common/cards/userCards/QualitiesCard';
 import MeetingsCard from '../../common/cards/userCards/MeetingsCard';
 import CommentsList from '../../common/cards/commentCards/CommenstList';
-import CommentsProvider from '../../../hooks/useComments';
 import { useSelector } from 'react-redux';
 import { getProfessionById } from '../../../store/professions';
 import { getUserById } from '../../../store/users';
@@ -37,9 +36,7 @@ const UserPage = ({ userId }) => {
           <MeetingsCard meetingsNumber={user.completedMeetings} />
         </div>
         <div className="col-md-8">
-          <CommentsProvider>
             <CommentsList />
-          </CommentsProvider>
         </div>
         </div>
       </div>
